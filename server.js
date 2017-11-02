@@ -9,7 +9,7 @@ const app = express();
 const cache = [];
 const emitter = new EventEmitter();
 
-app.get('/services', (req, res) => {
+app.get('/pods', (req, res) => {
   const stream = new EventStream(req);
   stream.pipe(res);
   emitter.on('data', obj => {
