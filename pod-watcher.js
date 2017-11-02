@@ -21,10 +21,10 @@ module.exports = Rx.Observable.create(observer => {
           observer.next(x);
         },
         error: err => {
-  				let pause;
+          let pause;
 
           if (err === 'connection closed') {
-  					pause = generateBackoff(1); // use short, random reconnect time
+            pause = generateBackoff(1); // use short, random reconnect time
           } else {
             pause = generateBackOff(errorCount++);
           }
