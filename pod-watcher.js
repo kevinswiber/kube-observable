@@ -3,6 +3,7 @@ const Rx = require('rxjs');
 const revolt = require('revolt');
 
 const jsonStreamMiddleware = require('./json-stream-middleware');
+const logConnectedMiddleware = require('./log-connected-middleware.js');
 
 const CONNECTION_CLOSED = require('./constants').CONNECTION_CLOSED;
 
@@ -14,16 +15,10 @@ const watchURL = process.env.WATCH_URL ||
 // create a new connection to the Kubernetes API.
 const client$ = Rx.Observable.create(observer => {
   return revolt()
+    .use(logConnectedMiddleware(debug))
     .use(jsonStreamMiddleware)
     .get(watchURL)
-    .subscribe({
-      next: x => {
-        observer.next(x);
-      },
-      error: err => {
-        observer.error(err);
-      }
-    });
+    .subscribe(observer);
 });
 
 // When the Kubernetes API Server closes the connection,
@@ -44,6 +39,7 @@ module.exports = client$
           errorCount = 0;
           pause = generateBackoff(1); // allow short, random reconnect time
         } else {
+          debug('error count:', errorCount);
           pause = generateBackoff(errorCount++);
         }
 
@@ -51,6 +47,10 @@ module.exports = client$
 
         return Rx.Observable.timer(pause);
       });
+  })
+  .map(data => {
+    debug('receiving data');
+    return data;
   });
 
 const generateBackoff = function(attempt) {
