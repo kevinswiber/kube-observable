@@ -36,7 +36,7 @@ app.get('/pods', (req, res) => {
   });
 });
 
-app.listen(8080);
+//app.listen(8080);
 
 podWatcher
   .subscribe(obj => {
