@@ -29,9 +29,7 @@ module.exports = client$
     let errorCount = 0;
     return errors
       .flatMap(err => {
-        if (err) {
-          debug(err);
-        }
+        debug(err);
 
         let pause; // backoff time
 
@@ -40,6 +38,7 @@ module.exports = client$
           pause = generateBackoff(1); // allow short, random reconnect time
         } else {
           pause = generateBackoff(errorCount++);
+
           debug('error count:', errorCount);
         }
 
