@@ -5,7 +5,7 @@ const revolt = require('revolt');
 const jsonStreamMiddleware = require('./json-stream-middleware');
 const logConnectedMiddleware = require('./log-connected-middleware.js');
 
-const CONNECTION_CLOSED = require('./constants').CONNECTION_CLOSED;
+const { CONNECTION_CLOSED } = require('./constants');
 
 const watchURL = process.env.WATCH_URL || 
   'http://localhost:8001/api/v1/namespaces/default/pods?watch=true&timeoutSeconds=60';
@@ -39,8 +39,8 @@ module.exports = client$
           errorCount = 0;
           pause = generateBackoff(1); // allow short, random reconnect time
         } else {
-          debug('error count:', errorCount);
           pause = generateBackoff(errorCount++);
+          debug('error count:', errorCount);
         }
 
         debug(`reconnecting in ${pause}ms`);

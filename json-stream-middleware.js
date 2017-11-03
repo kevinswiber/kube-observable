@@ -1,7 +1,7 @@
 const JSONStream = require('json-stream');
 const Rx = require('rxjs');
 
-const CONNECTION_CLOSED = require('./constants').CONNECTION_CLOSED;
+const { CONNECTION_CLOSED } = require('./constants');
 
 module.exports = handle => {
   handle('response', pipeline => {
