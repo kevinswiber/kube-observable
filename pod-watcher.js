@@ -8,7 +8,7 @@ const logConnectedMiddleware = require('./log-connected-middleware.js');
 const { CONNECTION_CLOSED } = require('./constants');
 
 const watchURL = process.env.WATCH_URL || 
-  'http://localhost:8001/api/v1/namespaces/default/pods?watch=true&timeoutSeconds=60';
+  'http://localhost:8001/api/v1/namespaces/default/pods?watch=true&timeoutSeconds=3';
 
 // We are wrapping the client request call in
 // an Observable subscription.  This allows each retry to
@@ -28,7 +28,7 @@ module.exports = client$
   .retryWhen(errors => {
     let errorCount = 0;
     return errors
-      .flatMap(err => {
+      .switchMap(err => {
         debug(err);
 
         let pause; // backoff time

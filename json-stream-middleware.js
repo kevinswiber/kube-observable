@@ -5,7 +5,7 @@ const { CONNECTION_CLOSED } = require('./constants');
 
 module.exports = handle => {
   handle('response', pipeline => {
-    return pipeline.flatMap(env => {
+    return pipeline.switchMap(env => {
       return Rx.Observable.create(observer => {
         const stream = new JSONStream();
 
@@ -19,6 +19,7 @@ module.exports = handle => {
           // We treat closed connections as errors
           // to take advantage of retry logic.
           observer.error(CONNECTION_CLOSED);
+          //observer.complete();
         });
 
         env.response.pipe(stream);
