@@ -14,6 +14,8 @@ module.exports = handle => {
           observer.error(err);
         });
         stream.on('end', () => {
+          // We treat closed connections as errors
+          // to take advantage of retry logic.
           observer.error('connection closed');
         });
 
