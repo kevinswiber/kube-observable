@@ -1,0 +1,31 @@
+{
+  "name": "kube-pod-watcher",
+  "version": "0.1.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "debug": "^3.1.0",
+    "express": "^4.16.2",
+    "eventsource": "^1.0.5",
+    "json-stream": "^1.0.0",
+    "kube-watch": "^0.5.4",
+    "revolt": "^1.0.1",
+    "rxjs": "^5.5.2",
+    "ssestream": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevinswiber/kube-pod-watcher.git"
+  },
+  "author": "Kevin Swiber <kswiber@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kevinswiber/kube-pod-watcher/issues"
+  },
+  "homepage": "https://github.com/kevinswiber/kube-pod-watcher#readme"
+}

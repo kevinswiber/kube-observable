@@ -1,10 +1,13 @@
+const debug = require('debug')('kube-pod-watcher:pod-watcher');
 const Rx = require('rxjs');
 const revolt = require('revolt');
 
 const jsonStreamMiddleware = require('./json-stream-middleware');
 
+const CONNECTION_CLOSED = require('./constants').CONNECTION_CLOSED;
+
 const watchURL = process.env.WATCH_URL || 
-  'http://localhost:8001/api/v1/namespaces/default/pods?watch=true&timeoutSeconds=3';
+  'http://localhost:8001/api/v1/namespaces/default/pods?watch=true&timeoutSeconds=60';
 
 // We are wrapping the client request call in
 // an Observable subscription.  This allows each retry to
@@ -26,18 +29,25 @@ const client$ = Rx.Observable.create(observer => {
 // When the Kubernetes API Server closes the connection,
 // we are treating this like an error and using
 // Observable retry logic to reconnect.
-let errorCount = 0;
 module.exports = client$
   .retryWhen(errors => {
+    let errorCount = 0;
     return errors
       .flatMap(err => {
+        if (err) {
+          debug(err);
+        }
+
         let pause; // backoff time
 
-        if (err === 'connection closed') {
+        if (err === CONNECTION_CLOSED) {
+          errorCount = 0;
           pause = generateBackoff(1); // allow short, random reconnect time
         } else {
           pause = generateBackoff(errorCount++);
         }
+
+        debug(`reconnecting in ${pause}ms`);
 
         return Rx.Observable.timer(pause);
       });

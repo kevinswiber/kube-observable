@@ -1,3 +1,4 @@
+const debug = require('debug')('kube-pod-watcher:server');
 const express = require('express');
 const EventEmitter = require('events');
 const EventStream = require('ssestream');
@@ -20,17 +21,17 @@ app.get('/pods', (req, res) => {
   });
 
   res.on('close', () => {
-    console.log('closed');
+    debug('response closed');
     stream.unpipe(res);
   });
 
   res.on('error', err => {
-    console.error(err);
+    debug('response error:', err);
     stream.unpipe(res);
   });
   
   res.on('timeout', () => {
-    console.log('timeout');
+    debug('response timeout');
     stream.unpipe(res);
   });
 });
