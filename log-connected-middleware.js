@@ -1,4 +1,4 @@
-const Observable = require('rxjs').Observable;
+const { Observable } = require('rxjs');
 
 module.exports = debug => {
   return handle => {

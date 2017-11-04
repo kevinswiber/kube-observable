@@ -1,10 +1,10 @@
 const JSONStream = require('json-stream');
-const Rx = require('rxjs');
+const { Observable } = require('rxjs');
 
 module.exports = handle => {
-  handle('response', pipeline$ => {
+  handle('response', (pipeline$) => {
     return pipeline$.switchMap(env => {
-      return Rx.Observable.create(observer => {
+      return Observable.create(observer => {
         const stream = new JSONStream();
 
         stream.on('data', x => observer.next(x));

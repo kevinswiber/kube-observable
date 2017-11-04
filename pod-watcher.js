@@ -8,9 +8,9 @@ const logConnectedMiddleware = require('./log-connected-middleware.js');
 const watchURL = process.env.WATCH_URL || 
   'http://localhost:8001/api/v1/namespaces/default/pods?watch=true&timeoutSeconds=3';
 
-// We are wrapping the client request call in
-// an Observable subscription.  This allows each repeat/retry to
-// create a new connection to the Kubernetes API.
+// The request is wrapped in an Observable.
+// This allows each repeat/retry to create a new
+// connection to the URL.
 const client$ = Observable.create(observer => {
   return revolt()
     .use(logConnectedMiddleware(debug))
@@ -19,7 +19,7 @@ const client$ = Observable.create(observer => {
     .subscribe(observer);
 });
 
-const resilientClient$ = client$
+const resilient$ = client$
   .retryWhen((errors$) => {
     return errors$
       .switchMap((err, index) => {
@@ -38,6 +38,7 @@ const resilientClient$ = client$
       .switchMap(() => {
         const pause = generateBackoff(1); // allow short, random reconnect time
 
+        debug('connection closed');
         debug(`reconnecting in ${pause}ms`);
 
         return Observable.timer(pause);
@@ -45,7 +46,7 @@ const resilientClient$ = client$
   });
 
 module.exports = Observable.create(observer => {
-  resilientClient$
+  resilient$
     .subscribe({
       next: x => {
         debug('receiving data');
