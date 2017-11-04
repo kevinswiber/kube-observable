@@ -19,7 +19,7 @@ const client$ = Observable.create(observer => {
     .subscribe(observer);
 });
 
-module.exports = client$
+const resilientClient$ = client$
   .retryWhen(errors => {
     return errors
       .switchMap((err, index) => {
@@ -42,11 +42,19 @@ module.exports = client$
 
         return Observable.timer(pause);
       });
-  })
-  .map(data => {
-    debug('receiving data');
-    return data;
   });
+
+module.exports = Observable.create(observer => {
+  resilientClient$
+    .subscribe({
+      next: x => {
+        debug('receiving data');
+        observer.next(x);
+      },
+      error: err => observer.error(err),
+      complete: () => observer.complete()
+    });
+});
 
 const generateBackoff = function(attempt) {
   const reconnect = {
