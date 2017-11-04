@@ -20,8 +20,8 @@ const client$ = Observable.create(observer => {
 });
 
 const resilientClient$ = client$
-  .retryWhen(errors => {
-    return errors
+  .retryWhen((errors$) => {
+    return errors$
       .switchMap((err, index) => {
         const errorCount = index + 1;
         const pause = generateBackoff(errorCount);
@@ -33,8 +33,8 @@ const resilientClient$ = client$
         return Observable.timer(pause);
       });
   })
-  .repeatWhen(notifications => {
-    return notifications
+  .repeatWhen((notifications$) => {
+    return notifications$
       .switchMap(() => {
         const pause = generateBackoff(1); // allow short, random reconnect time
 
