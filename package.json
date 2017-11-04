@@ -9,7 +9,7 @@
     "express": "^4.16.2",
     "json-stream": "^1.0.0",
     "kube-watch": "^0.5.4",
-    "revolt": "^1.0.2",
+    "revolt": "^1.0.3",
     "rxjs": "^5.5.2",
     "ssestream": "^1.0.0"
   },

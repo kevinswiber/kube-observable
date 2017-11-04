@@ -8,18 +8,10 @@ const logConnectedMiddleware = require('./log-connected-middleware.js');
 const watchURL = process.env.WATCH_URL || 
   'http://localhost:8001/api/v1/namespaces/default/pods?watch=true&timeoutSeconds=3';
 
-// The request is wrapped in an Observable.
-// This allows each repeat/retry to create a new
-// connection to the URL.
-const client$ = Observable.create(observer => {
-  return revolt()
-    .use(logConnectedMiddleware(debug))
-    .use(jsonStreamMiddleware)
-    .get(watchURL)
-    .subscribe(observer);
-});
-
-const resilient$ = client$
+const client$ = revolt()
+  .use(logConnectedMiddleware(debug))
+  .use(jsonStreamMiddleware)
+  .get(watchURL)
   .retryWhen((errors$) => {
     return errors$
       .switchMap((err, index) => {
@@ -46,7 +38,7 @@ const resilient$ = client$
   });
 
 module.exports = Observable.create(observer => {
-  resilient$
+  client$
     .subscribe({
       next: x => {
         debug('receiving data');
