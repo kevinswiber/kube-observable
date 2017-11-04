@@ -19,26 +19,25 @@ const client$ = Observable.create(observer => {
     .subscribe(observer);
 });
 
-let errorCount = 0;
 module.exports = client$
-  .repeatWhen(notifications => {
-    return notifications
-      .switchMap(() => {
-        errorCount = 0;
-        const pause = generateBackoff(1); // allow short, random reconnect time
+  .retryWhen(errors => {
+    return errors
+      .switchMap((err, index) => {
+        const errorCount = index + 1;
+        const pause = generateBackoff(errorCount);
 
+        debug('error:', err.stack);
+        debug('error count:', errorCount);
         debug(`reconnecting in ${pause}ms`);
 
         return Observable.timer(pause);
       });
   })
-  .retryWhen(errors => {
-    return errors
-      .switchMap(err => {
-        const pause = generateBackoff(errorCount++);
+  .repeatWhen(notifications => {
+    return notifications
+      .switchMap(() => {
+        const pause = generateBackoff(1); // allow short, random reconnect time
 
-        debug('error:', err.stack);
-        debug('error count:', errorCount);
         debug(`reconnecting in ${pause}ms`);
 
         return Observable.timer(pause);
