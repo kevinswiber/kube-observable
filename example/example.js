@@ -11,4 +11,3 @@ pods$
       name: obj.object.metadata.name
     });
   });
-
