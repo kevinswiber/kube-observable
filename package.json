@@ -1,17 +1,13 @@
 {
-  "name": "kube-pod-watcher",
+  "name": "kube-observable",
   "version": "0.1.0",
-  "description": "",
-  "main": "server.js",
+  "description": "Watch Kubernetes resources with a resilient RxJS Observable client.",
+  "main": "observable.js",
   "dependencies": {
     "debug": "^3.1.0",
-    "eventsource": "^1.0.5",
-    "express": "^4.16.2",
     "json-stream": "^1.0.0",
-    "kube-watch": "^0.5.4",
-    "revolt": "^1.0.3",
-    "rxjs": "^5.5.2",
-    "ssestream": "^1.0.0"
+    "revolt": "^1.0.4",
+    "rxjs": "^5.5.2"
   },
   "devDependencies": {},
   "scripts": {
@@ -20,12 +16,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kevinswiber/kube-pod-watcher.git"
+    "url": "git+https://github.com/kevinswiber/kube-observable.git"
   },
   "author": "Kevin Swiber <kswiber@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kevinswiber/kube-pod-watcher/issues"
+    "url": "https://github.com/kevinswiber/kube-observable/issues"
   },
-  "homepage": "https://github.com/kevinswiber/kube-pod-watcher#readme"
+  "homepage": "https://github.com/kevinswiber/kube-observable#readme",
+  "directories": {
+    "example": "example"
+  },
+  "keywords": [
+    "kubernetes",
+    "resources",
+    "watch",
+    "observable",
+    "rx",
+    "reactive",
+    "resilient",
+    "rxjs"
+  ]
 }
